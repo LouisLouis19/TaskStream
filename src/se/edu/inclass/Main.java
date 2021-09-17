@@ -20,13 +20,17 @@ public class Main {
         //System.out.println("Printing deadlines");
         //printDeadlines(tasksData);
 
+
         System.out.println("Total number of deadlines: " + countDeadlines(tasksData));
         //printData(tasksData);
         //printDataWithStreams(tasksData);
 
-        printDeadlinesUsingStream(tasksData);
-        System.out.println("Total number of deadlines: " + countDeadlinesUsingStream(tasksData));
 
+
+        //System.out.println("Total number of deadlines: " + countDeadlines(tasksData));
+        printDeadlinesUsingStream(tasksData);
+        ArrayList<Task> filteredList = filterTaskByString(tasksData, "11");
+        printData(filteredList);
     }
 
     private static int countDeadlines(ArrayList<Task> tasksData) {
@@ -69,9 +73,18 @@ public class Main {
     }
 
     public static void printDeadlinesUsingStream(ArrayList<Task> tasks) {
-        System.out.println("Printing deadlines using stream");
+
         tasks.stream()
-                .filter((t) -> t instanceof Deadline) // filtering operation using lambda
+                .filter((t) -> t instanceof Deadline)
+                .sorted((a, b) -> a.getDescription().toLowerCase().compareTo(b.getDescription().toLowerCase()))
                 .forEach(System.out::println);
+    }
+
+
+    public static ArrayList<Task> filterTaskByString(ArrayList<Task> tasks, String filterString) {
+        ArrayList<Task> filteredList = (ArrayList<Task>) tasks.stream()
+                .filter((t) -> t.getDescription().contains(filterString))
+                .collect(Collectors.toList());
+        return filteredList;
     }
 }
